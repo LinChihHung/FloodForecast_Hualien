@@ -6,5 +6,5 @@ _url = {
 	'QPESUMSQPF': 'http://fsv.manysplendid.com.tw/rfd-grid/QPESUMS_QPF/',
 	'QPESUMSWRF': 'http://fsv.manysplendid.com.tw/rfd-grid/QPESUMS_WRF/',
 	'CWB': 'https://iot.thinktron.co/api/data/influxdb/RF.php?stationId={}',
-	'WRA': 'https://fhy.wra.gov.tw/fhy/Monitor/Water'
+	'WL': 'https://iot.thinktron.co/api/data/influxdb/latestWL.php'
 }

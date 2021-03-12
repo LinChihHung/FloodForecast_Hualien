@@ -9,10 +9,11 @@ class HecHms():
     """A class for operating hechms model"""
 
     def __init__(
-            self, stationNameList, crossSectionList, rainDict,
+            self, path, stationNameList, crossSectionList, rainDict,
             startTime, endTime,
             hmsModelPath, controlName='Current', rainfallFileName='rainfallHms.dss'
     ):
+        self.path = path
         self.stationNameList = stationNameList
         self.crossSectionList = crossSectionList
         self.rainDict = rainDict
@@ -188,9 +189,12 @@ class HecHms():
             except:
                 pass
 
+            fid.close()
+
         return self.resultsDict
 
     def hmsrun(self):
-        executefilePath = os.path.abspath(r"floodforecast\functions\hmsrun.py")
+        executefilePath = os.path.abspath(r"floodforecast\functions\hmsengine.py")
         os.chdir(r'C:\Program Files\HEC\HEC-HMS\4.5')
         os.system(r'.\HEC-HMS.cmd -script {}'.format(executefilePath))
+        os.chdir(self.path)

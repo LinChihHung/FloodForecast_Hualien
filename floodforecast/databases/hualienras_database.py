@@ -1,4 +1,4 @@
-_hualienCrossSection = {
+_hualienBoundaryXS = {
     'FL': {
         'Node': {
             'River': 'FL',
@@ -86,5 +86,72 @@ _hualienCrossSection = {
             'RS': '-01'
         },
         'Boundary_Type': 'Stage Series'
+    }
+}
+
+
+_hualienWaterLevelXS = {
+    'PingLin': {
+        'Node': {
+            'River': 'SF',
+            'Reach': 'Reach 6',
+            'RS': '14'
+        },
+        'chineseName': '平林',
+        'stationCode': '2420H018'
+    },
+    'JenShouBridge': {
+        'Node': {
+            'River': 'MU',
+            'Reach': 'Reach 7',
+            'RS': '19'
+        },
+        'chineseName': '仁壽橋',
+        'stationCode': '2420H019'
+    },
+    'HualienBridge': {
+        'Node': {
+            'River': 'HL',
+            'Reach': 'HL-Reach 11',
+            'RS': '04.1'
+        },
+        'chineseName': '花蓮大橋',
+        'stationCode': '2420H024'
+    },
+    'MaAnChiBridge': {
+        'Node': {
+            'River': 'MA',
+            'Reach': 'Reach 4',
+            'RS': '12'
+        },
+        'chineseName': '馬鞍溪橋',
+        'stationCode': '2420H036'
+    },
+    'WanLiChiBridge': {
+        'Node': {
+            'River': 'OA',
+            'Reach': 'Reach 5',
+            'RS': '13'
+        },
+        'chineseName': '萬里溪橋',
+        'stationCode': '2420H037'
+    },
+    'JianYingBridge': {
+        'Node': {
+            'River': 'HL',
+            'Reach': 'HL-Reach 6',
+            'RS': '42.1'
+        },
+        'chineseName': '箭瑛大橋',
+        'stationCode': '2420H043'
+    },
+    'MiZhanBridge': {
+        'Node': {
+            'River': 'HL',
+            'Reach': 'HL-Reach 9',
+            'RS': '26.1'
+        },
+        'chineseName': '米棧大橋',
+        'stationCode': '2420H046'
     }
 }
