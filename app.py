@@ -17,15 +17,16 @@ def rain():
     with open('rainfall.json') as f:
         lines = f.read()
     RainJson = lines
-    
+
     return RainJson
+
 
 @app.route('/waterlevel')
 def waterlevel():
     with open('waterlevel.json') as f:
         lines = f.read()
     WaterlevelJson = lines
-    
+
     return WaterlevelJson
 
 

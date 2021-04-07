@@ -1,6 +1,7 @@
 import os
 import json
 
+
 class API():
 
     def __init__(self, path, nowDateRange, simDateRange, simRainDict, waterLevelDict):
@@ -8,14 +9,12 @@ class API():
         self.nowDateRange = nowDateRange
         self.simDateRange = simDateRange
         self.apiTimeDict = self.apiTime()
-        
+
         self.simRainDict = simRainDict
         self.apiRainDict = self.apiRain()
 
         self.waterLevelDict = waterLevelDict
         self.apiWaterLevelDict = self.apiWaterLevel()
-
-
 
     def apiTime(self):
         self.apiTimeDict = {}
@@ -23,7 +22,6 @@ class API():
         self.apiTimeDict['time'] = self.simDateRange.to_native_types().tolist()
 
         return self.apiTimeDict
-
 
     def apiRain(self):
         apiRainDict = [{**self.apiTimeDict, **self.simRainDict}]
@@ -34,12 +32,11 @@ class API():
 
         return apiRainDict
 
-    
     def apiWaterLevel(self):
         apiWaterLevelDict = [{**self.apiTimeDict, **self.waterLevelDict}]
 
         waterLevelPath = os.path.join(self.path, 'waterLevel.json')
         with open(waterLevelPath, 'w') as jsonFile:
             json.dump(apiWaterLevelDict, jsonFile)
-        
+
         return apiWaterLevelDict

@@ -23,7 +23,7 @@ class HecRas():
         self.endTime = endTime
         self.dateLen = len(pd.date_range(startTime, endTime, freq='H'))
         self.version = version
-        
+
         self.rasinput()
         self.obsWL = self.currentWaterLevel()
         self.waterLevelDict = self.rasrun()
@@ -32,14 +32,15 @@ class HecRas():
 
         if datatype == 'temp':
 
-            tempSeriesList = ['5' if i == 0 else '' for i in range(self.dateLen)]
-            tempDurationsList = [f'{self.dateLen}' if i == 0 else '' for i in range(self.dateLen)]
+            tempSeriesList = ['5' if i ==
+                              0 else '' for i in range(self.dateLen)]
+            tempDurationsList = [f'{self.dateLen}' if i ==
+                                 0 else '' for i in range(self.dateLen)]
 
             tempSeriesStr = ','.join(tempSeriesList)
             tempDurationsStr = ','.join(tempDurationsList)
 
             return tempSeriesStr, tempDurationsStr
-
 
         elif datatype == 'stage':
 
@@ -49,17 +50,17 @@ class HecRas():
             stageSeriesStr = ','.join(stageSeriesList)
             stageDurationsStr = ','.join(stageDurationsList)
 
-            return stageSeriesStr,stageDurationsStr
-
+            return stageSeriesStr, stageDurationsStr
 
         elif datatype == 'flow':
             for xs in self.boundaryXSList:
-                
+
                 if self.boundaryXS[xs]['Boundary_Type'] == 'Stage Series':
                     pass
-                
+
                 if self.boundaryXS[xs]['Boundary_Type'] == 'Flow Series':
-                    flowSeriesList = ['10' if i == 0.0 else i for i in self.resultDict[xs]]
+                    flowSeriesList = ['10' if i ==
+                                      0.0 else i for i in self.resultDict[xs]]
 
             flowComIncList = ['1' for i in range(self.dateLen)]
             flowDurationsList = ['1' for i in range(self.dateLen)]
@@ -70,47 +71,50 @@ class HecRas():
 
             return flowSeriesStr, flowComIncStr, flowDurationsStr
 
-
         else:
             raise TypeError
 
     def rasinput(self):
         data = ET.Element('Data')
 
-        info = ET.SubElement(data, 'FileInfo', 
-        {'Title': "quasi", 'Version': 'HEC-RAS 5.0.7 March 2019'})
+        info = ET.SubElement(data, 'FileInfo',
+                             {'Title': "quasi", 'Version': 'HEC-RAS 5.0.7 March 2019'})
         startDateTime = ET.SubElement(data, 'Start_Date_Time')
         boundaryConditions = ET.SubElement(data, 'Boundary_Conditions')
 
         temparatureData = ET.SubElement(data, 'Temperature_Data')
-        tempTimeReference = ET.SubElement(temparatureData, 'Temp_TimeReference', 
-        {'Type': 'Simulation', 'Date': '06NOV2020', 'Time': '11:00'})
+        tempTimeReference = ET.SubElement(temparatureData, 'Temp_TimeReference',
+                                          {'Type': 'Simulation', 'Date': '06NOV2020', 'Time': '11:00'})
         tempSeries = ET.SubElement(temparatureData, 'Temp_Series')
         tempDuration = ET.SubElement(temparatureData, 'Durations')
-        
+
         tempSeries.text = self.rastext(datatype='temp')[0]
         tempDuration.text = self.rastext(datatype='temp')[1]
 
         for xs in self.boundaryXSList:
             # xs stands for cross section
             if self.boundaryXS[xs]['Boundary_Type'] == 'Stage Series':
-                node = ET.SubElement(boundaryConditions, 'Node', self.boundaryXS[xs]['Node'])
-                boundaryType = ET.SubElement(node, 'Boundary', {'Type': 'Stage Series'})
+                node = ET.SubElement(boundaryConditions,
+                                     'Node', self.boundaryXS[xs]['Node'])
+                boundaryType = ET.SubElement(
+                    node, 'Boundary', {'Type': 'Stage Series'})
                 date = ET.SubElement(node, 'Date', {'Type': 'Simulation'})
                 stage = ET.SubElement(node, 'Stages')
                 durations = ET.SubElement(node, 'Durations')
-                
+
                 stage.text = self.rastext(datatype='stage')[0]
                 durations.text = self.rastext(datatype='stage')[1]
 
             if self.boundaryXS[xs]['Boundary_Type'] == 'Flow Series':
-                node = ET.SubElement(boundaryConditions, 'Node', self.boundaryXS[xs]['Node'])
-                boundaryType = ET.SubElement(node, 'Boundary', {'Type': 'Flow Series'})
+                node = ET.SubElement(boundaryConditions,
+                                     'Node', self.boundaryXS[xs]['Node'])
+                boundaryType = ET.SubElement(
+                    node, 'Boundary', {'Type': 'Flow Series'})
                 date = ET.SubElement(node, 'Date', {'Type': 'Simulation'})
                 flow = ET.SubElement(node, 'Flows')
                 compInc = ET.SubElement(node, 'Comp_Inc')
                 durations = ET.SubElement(node, 'Durations')
-                
+
                 flow.text = self.rastext(datatype='flow')[0]
                 compInc.text = self.rastext(datatype='flow')[1]
                 durations.text = self.rastext(datatype='flow')[2]
@@ -119,6 +123,7 @@ class HecRas():
         tree.write(os.path.join(self.rasModelPath, self.rasInputName))
         # print('-----------------------------------------------------------------')
         # print(os.path.join(self.rasModelPath, self.rasInputName))
+
     def currentWaterLevel(self):
         obsWL = {}
         data = urlopen(_url['WL']).read().decode('utf-8')
@@ -129,7 +134,6 @@ class HecRas():
                     obsWL[i] = output[j]['last_level']
         # print(obsWL)
         return obsWL
-
 
     def rasrun(self):
         rc = rascontrol.RasController(version=self.version)
@@ -143,13 +147,16 @@ class HecRas():
             reach = self.waterLevelXS[stName]['Node']['Reach']
 
             intitialWaterLevel = self.obsWL[stName]
-            waterLevelDiff = intitialWaterLevel - rc.get_xs(xs_id=xs_id, river=river, reach=reach).value(rc.get_profiles()[25], 2)
+            waterLevelDiff = intitialWaterLevel - \
+                rc.get_xs(xs_id=xs_id, river=river, reach=reach).value(
+                    rc.get_profiles()[25], 2)
             waterLevelList = [
-                round(waterLevelDiff + 
-                rc.get_xs(xs_id=xs_id, river=river, reach=reach).value(rc.get_profiles()[i], 2), 2) for i in range(25, 49)
-                ]
-            waterLevelDict[self.waterLevelXS[stName]['stationCode']] = waterLevelList
-        
+                round(waterLevelDiff +
+                      rc.get_xs(xs_id=xs_id, river=river, reach=reach).value(rc.get_profiles()[i], 2), 2) for i in range(25, 49)
+            ]
+            waterLevelDict[self.waterLevelXS[stName]
+                           ['stationCode']] = waterLevelList
+
         rc.close()
-        
+
         return waterLevelDict
