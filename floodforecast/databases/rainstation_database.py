@@ -605,7 +605,7 @@ _stationData = {
         "points": [11248, 11249, 11136, 11137, 11138, 11025, 11026, 11027],
     },
     '466990': {
-        "chineseName": "花蓮", 
+        "chineseName": "花蓮",
         "points": [8341, 8239, 8240, 8135, 8136, 8137]
     },
     "O1T840": {
@@ -715,7 +715,7 @@ _stationData = {
         ],
     },
     "C0Z310": {
-        "chineseName": "清水斷崖", 
+        "chineseName": "清水斷崖",
         "points": [6372, 6275, 6276, 6277, 6177, 6178]},
     "C0Z190": {
         "chineseName": "富世",
@@ -996,3 +996,8 @@ _stationData = {
         "points": [8640, 8641, 8642, 8643, 8537, 8538, 8539, 8540, 8435, 8436, 8437],
     },
 }
+
+_email = [
+    's998834@gmail.com',
+    'chihhunglin@hetengtech.com'
+]

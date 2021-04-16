@@ -15,6 +15,7 @@ from datetime import datetime
 def main():
     PROJECTPATH = os.getcwd()
     stationNameList = list(_stationData.keys())
+    print(PROJECTPATH)
 
     times = Timer()
     rain = Rain(
@@ -23,23 +24,23 @@ def main():
     rainDict = rain.rainDict
     simRainDict = rain.simRainDict
 
-    print(simRainDict)
+    # print(simRainDict)
 
     # PlotRain(stationNameList=stationNameList, simRainDict=simRainDict,
     #          nowTime=times.nowTime, nowFormat=times.nowFormat, dateRange=times.simDateRange)
 
-    # hualienBoundaryXSList = list(_hualienBoundaryXS.keys())
-    # hualienHmsModelPath = r'D:\2020_Flood_Forecasting\HualienRiver\HEC\HEC_HMS\HualienRiver_HMS_0917'
-    # hecHms = HecHms(
-    #     path=PROJECTPATH,
-    #     stationNameList=stationNameList,
-    #     crossSectionList=hualienBoundaryXSList,
-    #     rainDict=rainDict,
-    #     startTime=times.startTime,
-    #     endTime=times.endTime,
-    #     hmsModelPath=hualienHmsModelPath
-    # )
-    # time.sleep(3)
+    hualienBoundaryXSList = list(_hualienBoundaryXS.keys())
+    hualienHmsModelPath = r'D:\2020_Flood_Forecasting\HualienRiver\HEC\HEC_HMS\HualienRiver_HMS_0917'
+    hecHms = HecHms(
+        path=PROJECTPATH,
+        stationNameList=stationNameList,
+        crossSectionList=hualienBoundaryXSList,
+        rainDict=rainDict,
+        startTime=times.startTime,
+        endTime=times.endTime,
+        hmsModelPath=hualienHmsModelPath
+    )
+    time.sleep(3)
 
     # hualienRasModelPath = r'D:\2020_Flood_Forecasting\HualienRiver\HEC\HEC-RAS\0902HL'
     # hecRas = HecRas(

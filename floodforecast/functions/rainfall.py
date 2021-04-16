@@ -1,5 +1,5 @@
 from ..databases.url_database import _url
-from ..databases.rainstation_database import _stationData
+from ..databases.rainstation_database import _stationData, _email
 from ..functions.timer import Timer
 import os
 import collections
@@ -26,6 +26,7 @@ class Rain():
         self.obsUrl = _url[obsUrl]
         self.simUrl = _url[simUrl]
         self.rainDict, self.simRainDict = self.generateRainDicts()
+        self.rainwarning()
 
     def generateRainDicts(self):
         self.rainDict = {}
@@ -67,10 +68,11 @@ class Rain():
                 for stcode in self.stationNameList:
                     forecastPoint = [
                         int(i) for i in _stationData[stcode]['points']
-                        ]
+                    ]
                     value = round(mean(
-                        [float(i) for i in simRainDataFrame.loc[forecastPoint].iloc[:, 2]]
-                        ), 2)
+                        [float(i)
+                         for i in simRainDataFrame.loc[forecastPoint].iloc[:, 2]]
+                    ), 2)
                     self.rainDict[stcode].append(value)
                     self.simRainDict[stcode].append(value)
             except:
