@@ -60,7 +60,7 @@ class HecRas():
 
                 if self.boundaryXS[xs]['Boundary_Type'] == 'Flow Series':
                     flowSeriesList = ['10' if i ==
-                                      0.0 else i for i in self.resultDict[xs]]
+                                      0.0 else str(i) for i in self.resultDict[xs]]
 
             flowComIncList = ['1' for i in range(self.dateLen)]
             flowDurationsList = ['1' for i in range(self.dateLen)]
