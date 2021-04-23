@@ -6,6 +6,7 @@ from floodforecast.databases.hualienras_database import _hualienBoundaryXS, _hua
 from floodforecast.functions.api import API
 from floodforecast.functions.hechms import HecHms
 from floodforecast.functions.hecras import HecRas
+from floodforecast.functions.email import Email
 import os
 import time
 from flask import Flask
@@ -15,7 +16,6 @@ from datetime import datetime
 def main():
     PROJECTPATH = os.getcwd()
     stationNameList = list(_stationData.keys())
-    print(PROJECTPATH)
 
     times = Timer()
     rain = Rain(
@@ -23,24 +23,32 @@ def main():
     )
     rainDict = rain.rainDict
     simRainDict = rain.simRainDict
-
-    # print(simRainDict)
-
-    # PlotRain(stationNameList=stationNameList, simRainDict=simRainDict,
-    #          nowTime=times.nowTime, nowFormat=times.nowFormat, dateRange=times.simDateRange)
-
-    hualienBoundaryXSList = list(_hualienBoundaryXS.keys())
-    hualienHmsModelPath = r'D:\2020_Flood_Forecasting\HualienRiver\HEC\HEC_HMS\HualienRiver_HMS_0917'
-    hecHms = HecHms(
-        path=PROJECTPATH,
-        stationNameList=stationNameList,
-        crossSectionList=hualienBoundaryXSList,
-        rainDict=rainDict,
-        startTime=times.startTime,
-        endTime=times.endTime,
-        hmsModelPath=hualienHmsModelPath
+    warningStation = rain.warningStation
+    print(warningStation)
+    # 寄發Email通知
+    # 如果有測站達警戒值就發信件通知
+    if not warningStation:
+        pass
+    else:
+        PlotRain(
+            stationNameList=warningStation, simRainDict=simRainDict, nowTime=times.nowTime, nowFormat=times.nowFormat, dateRange=times.simDateRange
+        )
+    email = Email(
+        prjPath=PROJECTPATH, nowFormat=times.nowFormat, warningStation=warningStation
     )
-    time.sleep(3)
+
+    # hualienBoundaryXSList = list(_hualienBoundaryXS.keys())
+    # hualienHmsModelPath = r'D:\2020_Flood_Forecasting\HualienRiver\HEC\HEC_HMS\HualienRiver_HMS_0917'
+    # hecHms = HecHms(
+    #     path=PROJECTPATH,
+    #     stationNameList=stationNameList,
+    #     crossSectionList=hualienBoundaryXSList,
+    #     rainDict=rainDict,
+    #     startTime=times.startTime,
+    #     endTime=times.endTime,
+    #     hmsModelPath=hualienHmsModelPath
+    # )
+    # time.sleep(3)
 
     # hualienRasModelPath = r'D:\2020_Flood_Forecasting\HualienRiver\HEC\HEC-RAS\0902HL'
     # hecRas = HecRas(

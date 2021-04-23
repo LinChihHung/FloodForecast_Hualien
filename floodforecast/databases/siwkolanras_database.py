@@ -1,4 +1,12 @@
 _siwkolanBoundaryXS = {
+    'Siwkolan_Stage': {
+        'Node': {
+            'River': '00 Siouguluan',
+            'Reach': 'Reach01',
+            'RS': '0.0'
+        },
+        'Boundary_Type': 'Stage Series'
+    },
     '00 Siouguluan': {
         'Node': {
             'River': '00 Siouguluan',

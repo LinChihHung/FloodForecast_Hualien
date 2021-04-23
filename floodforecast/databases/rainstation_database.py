@@ -999,5 +999,6 @@ _stationData = {
 
 _email = [
     's998834@gmail.com',
-    'chihhunglin@hetengtech.com'
+    'chihhunglin@hetengtech.com',
+    'jyhuang@hetengtech.com'
 ]

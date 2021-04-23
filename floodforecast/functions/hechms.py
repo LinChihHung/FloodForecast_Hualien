@@ -2,6 +2,7 @@ from pydsstools.heclib.dss import HecDss
 from pydsstools.core import TimeSeriesContainer
 import os
 import numpy as np
+import time
 # from ..functions.hmsrun import hmsrun
 
 
@@ -19,10 +20,10 @@ class HecHms():
         self.rainDict = rainDict
         self.startTime = startTime
         self.endTime = endTime
-        self.hmsModelPath = hmsModelPath
         # rainfallFileName default rainfallHms.dss
+        self.hmsModelPath = hmsModelPath
         self.rainfallFileName = rainfallFileName
-        self.controlName = controlName  # controlName default 'Current'
+        self.controlName = controlName          # controlName default 'Current'
         self.gagePath, self.rainfallPath, self.controlPath, self.resultPath = self.hmssetup()
         self.hmsrain()
         self.hmsgage()

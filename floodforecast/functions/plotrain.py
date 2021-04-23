@@ -89,6 +89,10 @@ class PlotRain():
                        columnspacing=1, handlelength=0.5, handletextpad=0.5, edgecolor='k')
 
             fig.tight_layout()
-            fig.savefig(r'{}.jpg'.format(
-                os.path.join(self.rainImagePath, stcode)), dpi=330)
+
+            saveName = os.path.join(
+                self.rainImagePath,
+                stcode+'-' + _stationData[stcode]['chineseName']
+            )
+            fig.savefig(f'{saveName}.jpg', dpi=330)
             plt.close(fig)
