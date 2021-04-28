@@ -138,14 +138,18 @@ class HecHms():
             gagePathname = self.pathname(location=stcode, dss=False)
             try:
                 index = gageText.index('Gage: {}\n'.format(stcode))
-                DSSFileNameIndex = next(gageText.index(
-                    i) for i in gageText[index:] if i.find('DSS File Name') != -1)
-                DSSPathnameIndex = next(gageText.index(
-                    i) for i in gageText[index:] if i.find('DSS Pathname') != -1)
-                StartTimeIndex = next(gageText.index(
-                    i) for i in gageText[index:] if i.find('Start Time') != -1)
-                EndTimeIndex = next(gageText.index(
-                    i) for i in gageText[index:] if i.find('End Time') != -1)
+                DSSFileNameIndex = next(
+                    gageText.index(i) for i in gageText[index:] if i.find('DSS File Name') != -1
+                )
+                DSSPathnameIndex = next(
+                    gageText.index(i) for i in gageText[index:] if i.find('DSS Pathname') != -1
+                )
+                StartTimeIndex = next(
+                    gageText.index(i) for i in gageText[index:] if i.find('Start Time') != -1
+                )
+                EndTimeIndex = next(
+                    gageText.index(i) for i in gageText[index:] if i.find('End Time') != -1
+                )
 
                 gageText[DSSFileNameIndex] = f'       DSS File Name: {self.rainfallPath}\n'
                 gageText[DSSPathnameIndex] = f'       DSS Pathname: {gagePathname}\n'
@@ -163,14 +167,18 @@ class HecHms():
         with open(self.controlPath, 'r') as f:
             controlText = f.readlines()
 
-        startDateIndex = next(controlText.index(i)
-                              for i in controlText if i.find('Start Date') != -1)
-        startTimeIndex = next(controlText.index(i)
-                              for i in controlText if i.find('Start Time') != -1)
-        endDateIndex = next(controlText.index(i)
-                            for i in controlText if i.find('End Date') != -1)
-        endTimeIndex = next(controlText.index(i)
-                            for i in controlText if i.find('End Time') != -1)
+        startDateIndex = next(
+            controlText.index(i) for i in controlText if i.find('Start Date') != -1
+        )
+        startTimeIndex = next(
+            controlText.index(i) for i in controlText if i.find('Start Time') != -1
+        )
+        endDateIndex = next(
+            controlText.index(i) for i in controlText if i.find('End Date') != -1
+        )
+        endTimeIndex = next(
+            controlText.index(i) for i in controlText if i.find('End Time') != -1
+        )
 
         controlText[startDateIndex] = f'     Start Date: {self.startTime.strftime("%d %B %Y")}\n'
         controlText[startTimeIndex] = f'     Start Time: {self.startTime.strftime("%H:00")}\n'
@@ -187,7 +195,6 @@ class HecHms():
             try:
                 resultPathname = self.pathname(
                     location=crossSection, dss=True, flow=True)
-                print(resultPathname)
                 start = self.startTime.strftime('%d %B %Y, %H:00 ')
                 end = self.endTime.strftime('%d %B %Y, %H:00 ')
 
