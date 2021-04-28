@@ -29,7 +29,7 @@ class HecHms():
         self.hmsgage()
         self.hmscontrol()
         self.hmsrun()
-        # self.hmsresults()
+        self.hmsresults()
 
     def hmssetup(self):
         '''
