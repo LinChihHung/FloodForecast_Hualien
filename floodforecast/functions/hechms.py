@@ -53,18 +53,18 @@ class HecHms():
             self.hmsModelPath, self.rainfallFileName)
 
         # find path of control file from model path and read th name of control
-        controlFileName = [i for i in listDir if i.endswith('.control')]
+        controlFileName = f'{self.controlName}.control'
         controlFilePath = os.path.join(self.hmsModelPath, controlFileName[0])
 
         # find path of reslut file from model path according to controlName
-        resultFileName = [i for i in listDir if i == f'{self.controlName}.dss']
-        resultFilePath = os.path.join(self.hmsModelPath, resultFileName[0])
+        resultFileName = f'{self.controlName}.dss'
+        resultFilePath = os.path.join(self.hmsModelPath, resultFileName)
 
-        # delete all data in result file
-        fid = HecDss.Open(resultFilePath)
-        listPath = fid.getPathnameList(pathname='/*/*/*/*/*/*/')
-        for pathname in listPath:
-            fid.deletePathname(pathname)
+        # delete result file
+        if os.path.exists(resultFilePath):
+            os.remove(resultFilePath)
+        else:
+            pass
 
         return gageFilePath, rainfallFilePath, controlFilePath, resultFilePath
 

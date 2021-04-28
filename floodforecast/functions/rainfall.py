@@ -190,7 +190,7 @@ class Rain():
                             rain_file.write(' \n')
                     break
 
-                elif sum >= 30:    # 判斷是否達到大雨條件24hr內降雨達到80mm & 1hr內降雨達到40mm
+                elif sum >= 80:    # 判斷是否達到大雨條件24hr內降雨達到80mm & 1hr內降雨達到40mm
                     self.warningStation.append(key)
                     data_sum = 0
                     with open("rainfallWarn.txt", mode='a', encoding='utf-8') as rain_file:

@@ -19,7 +19,7 @@ class Email:
         self.sendEmail()
 
     def sendEmail(self):
-        if datetime.now().hour == 13:
+        if datetime.now().hour == 16:
             self.mkEmail()
         elif not self.warningStation:
             pass
