@@ -27,16 +27,15 @@ class Rain():
         self.obsFormat = obsFormat
         self.simFormat = simFormat
         self.obsUrl = _url[obsUrl]
-        self.simUrl = _url[simUrl]
-        self.rainDict, self.simRainDict = self.generateRainDicts()
-        self.warningStation = self.rainwarning()
+        # self.simUrl = _url[simUrl]
 
-    def generateRainDicts(self):
-        self.rainDict = {}
-        self.simRainDict = collections.defaultdict(list)
+        self.obsRainDict = self.generateObsRainDict()
+        self.simRainDict = self.generateSimRainDict(simUrl)
+        # self.warningStation = self.rainwarning()
 
-        zipName = 'grid_rain_0000.0{:0>2d}{}'
-        # extract obs data from thinktron's api
+    def generateObsRainDict(self):
+        obsRainDict = {}
+
         for stcode in self.stationNameList:
             data = urlopen(self.obsUrl.format(stcode)).read().decode('utf-8')
             output = json.loads(data)
@@ -54,13 +53,19 @@ class Rain():
                 else:
                     obsSeries.append(value)
 
-            self.rainDict[stcode] = obsSeries
+            obsRainDict[stcode] = obsSeries
 
+        return obsRainDict
+
+    def generateSimRainDict(self, simUrl):
+        simRainDict = collections.defaultdict(list)
+
+        zipName = 'grid_rain_0000.0{:0>2d}{}'
         # extract sim data from QPESUMS
         for num in range(len(self.simFormat)):
             try:
                 data = urlopen(os.path.join(
-                    self.simUrl, self.nowFormat, zipName.format(num + 1, '.zip')))
+                    _url[simUrl], self.nowFormat, zipName.format(num + 1, '.zip')))
                 zipfile = ZipFile(BytesIO(data.read()))
                 rawFile = []
 
@@ -68,30 +73,35 @@ class Rain():
                     rawData = re.split('\r|    |  ', line.decode('utf-8'))[0:3]
                     rawFile.append(rawData)
                 simRainDataFrame = pd.DataFrame(
-                    rawFile[5:], columns=['Longtitude', 'Latitude', 'intensity (mm/hr)'])
+                    rawFile[5:], columns=['Longtitude', 'Latitude', 'intensity (mm/hr)']
+                )
 
                 for stcode in self.stationNameList:
                     forecastPoint = [
                         int(i) for i in _stationData[stcode]['points']
                     ]
-                    value = round(mean(
-                        [float(i)
-                         for i in simRainDataFrame.loc[forecastPoint].iloc[:, 2]]
-                    ), 2)
-                    self.rainDict[stcode].append(value)
-                    self.simRainDict[stcode].append(value)
+                    value = round(
+                        mean(
+                            [float(i) for i in simRainDataFrame.loc[forecastPoint].iloc[:, 2]]
+                            ), 2
+                        )
+                    simRainDict[stcode].append(value)
             except:
-                self.rainDict[stcode].append(-9999)
-                self.simRainDict[stcode].append(-9999)
+                simRainDict[stcode].append(-9999)
 
-        return self.rainDict, self.simRainDict
+        return simRainDict
+    
+    def generateRainDict(self, obsRainDict, simRainDict):
+        rainDict = {**obsRainDict, **simRainDict}
+
+        return rainDict
 
 # 降雨警報函式
-    def rainwarning(self):
-        self.warning = self.simRainDict
-        self.warningStation = []
-        dic_values = self.warning.values()
-        dic_keys = self.warning.keys()
+    def rainwarning(self, simRainDict):
+        warning = simRainDict
+        warningStation = []
+        dic_values = warning.values()
+        dic_keys = warning.keys()
 
         # mode='w'刪除原txt檔的值,確保每次開都是空白
         rain_file = open("rainfallWarn.txt", mode='w', encoding='utf-8')
@@ -104,7 +114,7 @@ class Rain():
                 key = list(dic_keys)[list(dic_values).index(datas)]
                 sum += data_24hrs
                 if sum >= 500:      # 判斷是否達到超大豪雨條件24hr內降雨達到500mm
-                    self.warningStation.append(key)
+                    warningStation.append(key)
                     data_sum = 0
                     with open("rainfallWarn.txt", mode='a', encoding='utf-8') as rain_file:  # mode='a'依序寫入
                         rain_file.write(' \n')
@@ -133,7 +143,7 @@ class Rain():
                     break
 
                 elif sum >= 350:    # 判斷是否達到大豪雨條件24hr內降雨達到350mm & 3hr內降雨達到200mm
-                    self.warningStation.append(key)
+                    warningStation.append(key)
                     data_sum = 0
                     with open("rainfallWarn.txt", mode='a', encoding='utf-8') as rain_file:
                         rain_file.write(' \n')
@@ -162,7 +172,7 @@ class Rain():
                     break
 
                 elif sum >= 200:    # 判斷是否達到豪雨條件24hr內降雨達到200mm & 3hr內降雨達到100mm
-                    self.warningStation.append(key)
+                    warningStation.append(key)
                     data_sum = 0
                     with open("rainfallWarn.txt", mode='a', encoding='utf-8') as rain_file:
                         rain_file.write(' \n')
@@ -191,7 +201,7 @@ class Rain():
                     break
 
                 elif sum >= 80:    # 判斷是否達到大雨條件24hr內降雨達到80mm & 1hr內降雨達到40mm
-                    self.warningStation.append(key)
+                    warningStation.append(key)
                     data_sum = 0
                     with open("rainfallWarn.txt", mode='a', encoding='utf-8') as rain_file:
                         rain_file.write(' \n')
@@ -226,7 +236,7 @@ class Rain():
                     (datas[data_3hrs], datas[data_3hrs-1], datas[data_3hrs-2]))   # 前三小時資料作加總
                 key = list(dic_keys)[list(dic_values).index(datas)]
                 if rain_sum > 200:                    # 判斷3hr內降雨達到200mm
-                    self.warningStation.append(key)
+                    warningStation.append(key)
                     data_sum = 0
                     with open("rainfallWarn.txt", mode='a', encoding='utf-8') as rain_file:  # mode='a'依序寫入
                         rain_file.write(' \n')
@@ -255,7 +265,7 @@ class Rain():
                     break
 
                 elif rain_sum > 100:                  # 判斷3hr內降雨達到100mm
-                    self.warningStation.append(key)
+                    warningStation.append(key)
                     data_sum = 0
                     with open("rainfallWarn.txt", mode='a', encoding='utf-8') as rain_file:
                         rain_file.write(' \n')
@@ -286,7 +296,7 @@ class Rain():
             for data_1hr in datas:                       # 判斷1hr內降雨達到40mm
                 key = list(dic_keys)[list(dic_values).index(datas)]
                 if float(data_1hr) > 40:
-                    self.warningStation.append(key)
+                    warningStation.append(key)
                     data_sum = 0
                     with open("rainfallWarn.txt", mode='a', encoding='utf-8') as rain_file:
                         rain_file.write(' \n')
@@ -320,4 +330,4 @@ class Rain():
                 rain_file.write("24小時內無大雨以上事件發生")
             pass
 
-        return self.warningStation
+        return warningStation

@@ -27,3 +27,4 @@ class Timer():
 
 if __name__ == '__main__':
     times = Timer()
+    print(times.obsDateRange)

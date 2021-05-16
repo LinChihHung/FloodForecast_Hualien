@@ -7,30 +7,30 @@ from ..databases.rainstation_database import _stationData
 import os
 
 
-class PlotRain():
-    def __init__(self, stationNameList, simRainDict, nowTime, nowFormat, dateRange):
-        self.staionNameList = stationNameList
-        self.simRainDict = simRainDict
-        self.nowTime = nowTime
+class Plot():
+    def __init__(self, nowFormat):
         self.nowFormat = nowFormat
-        self.dateRange = dateRange
-        self.rainImagePath = self.mkdir()
-        self.plotrain()
+        self.imgPath = self.mkImgDir()
 
-    def mkdir(self):
+    def mkImgDir(self):
         # create a folder to save rainfall images
-        rainImagePath = os.path.join(os.getcwd(), 'images', self.nowFormat)
-        try:
-            os.mkdir(rainImagePath)
-        except:
-            # if folder is already exist. pass
+        imgPath = os.path.join(os.getcwd(), 'images', self.nowFormat)
+        if os.path.exists(imgPath):
             pass
+        else:
+            os.mkdir(imgPath)
 
-        return rainImagePath
+        return imgPath
 
-    def plotrain(self):
-        for stcode in self.staionNameList:
-            simRain = self.simRainDict[stcode]
+    def plotRain(self, stationNameList, simRainDict, nowTime, dateRange):
+        rainImgPath = os.path.join(self.imgPath, 'rain')
+        if os.path.exists(rainImgPath):
+            pass
+        else:
+            os.mkdir(rainImgPath)
+
+        for stcode in stationNameList:
+            simRain = simRainDict[stcode]
             cumSimRain = np.cumsum(simRain)
 
             fig, ax = plt.subplots(figsize=(16, 9))
@@ -40,13 +40,13 @@ class PlotRain():
             plt.rcParams['axes.axisbelow'] = True
 
             #### First axis for rainfall bar #####
-            width = np.min(np.diff(mdate.date2num(self.dateRange)))
+            width = np.min(np.diff(mdate.date2num(dateRange)))
             if all(i <= 50 for i in simRain) is True:
-                bar = ax.bar(self.dateRange, simRain, width=width,
+                bar = ax.bar(dateRange, simRain, width=width,
                              label='降雨量', edgecolor='k')
                 ax.set_yticks(np.arange(0, 55, 5))
             else:
-                bar = ax.bar(self.dateRange, simRain, width=width,
+                bar = ax.bar(dateRange, simRain, width=width,
                              label='降雨量', edgecolor='k')
 
             ax.set_xlabel('時間 (mm-dd hh)', fontsize=24, weight="bold")
@@ -58,11 +58,11 @@ class PlotRain():
             #### Second axis for cumulative rainfall ####
             ax2 = ax.twinx()
             if all(i <= 50 for i in cumSimRain) is True:
-                ax2.plot(self.dateRange, cumSimRain, label='累積雨量',
+                ax2.plot(dateRange, cumSimRain, label='累積雨量',
                          color=[0.8500, 0.3250, 0.0980], linewidth=3, linestyle='dashed')
                 ax2.set_ylim(ymax=50)
             else:
-                ax2.plot(self.dateRange, cumSimRain, label='累積雨量',
+                ax2.plot(dateRange, cumSimRain, label='累積雨量',
                          color=[0.8500, 0.3250, 0.0980], linewidth=3, linestyle='dashed')
 
             ax2.set_ylabel("累積雨量 (mm)", fontsize=24, weight="bold")
@@ -78,7 +78,7 @@ class PlotRain():
 
             ax3 = ax.twinx()
             ax3.yaxis.set_visible(False)
-            ax3.plot([], [], ' ', label='時間: {}'.format(self.nowTime))
+            ax3.plot([], [], ' ', label='時間: {}'.format(nowTime))
             ax3.plot([], [], 'ko',
                      label='未來一小時累積雨量: {:.1f} mm'.format(cumSimRain[0]))
             ax3.plot([], [], 'ko',
@@ -91,8 +91,19 @@ class PlotRain():
             fig.tight_layout()
 
             saveName = os.path.join(
-                self.rainImagePath,
-                stcode+'-' + _stationData[stcode]['chineseName']
+                rainImgPath, stcode+'-' + _stationData[stcode]['chineseName']
             )
             fig.savefig(f'{saveName}.jpg', dpi=330)
             plt.close(fig)
+
+    def plotWaterLevel(self, stationNameList, obsWaterDict, simWaterDict, obsDateRange, simDateRange, xsSection):
+        waterlevelImgPath = os.path.join(self.imgPath, 'waterlevel')
+        if os.path.exists(waterlevelImgPath):
+            pass
+        else:
+            os.mkdir(waterlevelImgPath)
+
+        fig, ax = plt.subplots(figsize=(16, 9))
+        plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei']
+        plt.rcParams['xtick.labelsize'] = 16
+        plt.rcParams['ytick.labelsize'] = 16
