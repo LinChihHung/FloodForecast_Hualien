@@ -150,8 +150,8 @@ class HecRas():
                 rc.get_xs(xs_id=xs_id, river=river, reach=reach).value(
                     rc.get_profiles()[25], 2)
             waterLevelList = [
-                round(waterLevelDiff +
-                      rc.get_xs(xs_id=xs_id, river=river, reach=reach).value(rc.get_profiles()[i], 2), 2) for i in range(25, 49)
+                round(
+                    waterLevelDiff + rc.get_xs(xs_id=xs_id, river=river, reach=reach).value(rc.get_profiles()[i], 2), 2) for i in range(25, 49)
             ]
             waterLevelDict[self.waterLevelXS[stName]
                            ['stationCode']] = waterLevelList

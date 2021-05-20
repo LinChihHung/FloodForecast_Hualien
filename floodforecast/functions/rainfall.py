@@ -20,18 +20,15 @@ class Rain():
     def __init__(
             self,
             stationNameList, nowFormat, obsFormat, simFormat,
-            obsUrl='CWB', simUrl='QPESUMSWRF'
+            obsUrl='CWB'
     ):
         self.stationNameList = stationNameList
         self.nowFormat = nowFormat
         self.obsFormat = obsFormat
         self.simFormat = simFormat
         self.obsUrl = _url[obsUrl]
-        # self.simUrl = _url[simUrl]
 
         self.obsRainDict = self.generateObsRainDict()
-        self.simRainDict = self.generateSimRainDict(simUrl)
-        # self.warningStation = self.rainwarning()
 
     def generateObsRainDict(self):
         obsRainDict = {}
@@ -61,7 +58,7 @@ class Rain():
         simRainDict = collections.defaultdict(list)
 
         zipName = 'grid_rain_0000.0{:0>2d}{}'
-        # extract sim data from QPESUMS
+        # extract sim data
         for num in range(len(self.simFormat)):
             try:
                 data = urlopen(os.path.join(
@@ -76,23 +73,29 @@ class Rain():
                     rawFile[5:], columns=['Longtitude', 'Latitude', 'intensity (mm/hr)']
                 )
 
-                for stcode in self.stationNameList:
-                    forecastPoint = [
-                        int(i) for i in _stationData[stcode]['points']
-                    ]
-                    value = round(
-                        mean(
-                            [float(i) for i in simRainDataFrame.loc[forecastPoint].iloc[:, 2]]
-                            ), 2
-                        )
-                    simRainDict[stcode].append(value)
+                simFlag = True
+            
             except:
-                simRainDict[stcode].append(-9999)
+                simFlag = False
+            
 
+            # append simRainDict's value
+            for stcode in self.stationNameList:
+                if simFlag:
+                    forecastPoint = [int(i) for i in _stationData[stcode]['points']]
+                    value = round(mean([float(i) for i in simRainDataFrame.loc[forecastPoint].iloc[:, 2]]), 2)
+                    simRainDict[stcode].append(value)
+                else:
+                    simRainDict[stcode].append(-9999)
+        
+        
         return simRainDict
     
     def generateRainDict(self, obsRainDict, simRainDict):
-        rainDict = {**obsRainDict, **simRainDict}
+        
+        rainDict = obsRainDict.copy()
+        for stcode in rainDict.keys():
+            rainDict[stcode].extend(simRainDict[stcode])
 
         return rainDict
 

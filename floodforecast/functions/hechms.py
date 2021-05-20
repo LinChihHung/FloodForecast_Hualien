@@ -54,7 +54,7 @@ class HecHms():
 
         # find path of control file from model path and read th name of control
         controlFileName = f'{self.controlName}.control'
-        controlFilePath = os.path.join(self.hmsModelPath, controlFileName[0])
+        controlFilePath = os.path.join(self.hmsModelPath, controlFileName)
 
         # find path of reslut file from model path according to controlName
         resultFileName = f'{self.controlName}.dss'

@@ -22,24 +22,18 @@ def main():
         stationNameList=stationNameList, nowFormat=times.nowFormat, obsFormat=times.obsFormat, simFormat=times.simFormat
     )
     obsRainDict = rain.obsRainDict
-    simRainDict = rain.generateSimRainDict(simUrl='QPESUMSWRF')
-    # print(simRainDict)
-
-    rainDict = rain.generateRainDict(obsRainDict, simRainDict)
-    print(rainDict)
-    # warningStation = rain.warningStation
-
-    # plot = Plot(nowFormat=times.nowFormat)
-    # plot.plotRain(
-    #     stationNameList=stationNameList, simRainDict=simRainDict, nowTime=times.nowTime, dateRange=times.simDateRange
-    # )
+    # QPESUMSWRF = rain.generateSimRainDict(simUrl='QPESUMSWRF')
+    QPESUMSQPF = rain.generateSimRainDict(simUrl='QPESUMSQPF')
+    print(QPESUMSQPF)
+    # rainDict = rain.generateRainDict(obsRainDict, QPESUMSWRF)
+    # warningStation = rain.rainwarning(simRainDict=QPESUMSWRF)
 
     # 寄發Email通知
     # 如果有測站達警戒值就發信件通知
     # if not warningStation:
     #     pass
     # else:
-    #     PlotRain(
+    #     Plot(
     #         stationNameList=warningStation, simRainDict=simRainDict, nowTime=times.nowTime, nowFormat=times.nowFormat, dateRange=times.simDateRange
     #     )
     # email = Email(
@@ -59,6 +53,7 @@ def main():
     # )
     # time.sleep(3)
 
+    # print(hecHms.resultsDictr)
     # hualienRasModelPath = r'D:\2020_Flood_Forecasting\HualienRiver\HEC\HEC-RAS\0902HL'
     # hecRas = HecRas(
     #     rasModelPath=hualienRasModelPath,
