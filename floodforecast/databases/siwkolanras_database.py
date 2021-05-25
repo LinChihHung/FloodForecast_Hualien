@@ -10,8 +10,8 @@ _siwkolanBoundaryXS = {
     '00 Siouguluan': {
         'Node': {
             'River': '00 Siouguluan',
-            'Reach': '',
-            'RS': ''
+            'Reach': '00',
+            'RS': '72068'
         },
         'Boundary_Type': 'Flow Series'
     },
@@ -123,7 +123,7 @@ _siwkolanBoundaryXS = {
         'Node': {
             'River': '07 Dapo Ci',
             'Reach': '07',
-            'RS': '2386'
+            'RS': '1161'
         },
         'Boundary_Type': 'Flow Series'
     },
@@ -214,5 +214,71 @@ _siwkolanBoundaryXS = {
             'RS': '10009.68'
         },
         'Boundary_Type': 'Flow Series'
+    }
+}
+
+_siwkolanWaterLevelXS = {
+    'ChoLuBridge': {
+        'Node': {
+            'River': '05 Lele Ci',
+            'Reach': '05',
+            'RS': '7810'
+        },
+        'chineseName': '卓樂橋',
+        'stationCode': '2370H004'
+    },
+    'LiShan': {
+        'Node': {
+            'River': '03 Fengping Ci',
+            'Reach': '03',
+            'RS': '11435.3'
+        },
+        'chineseName': '立山',
+        'stationCode': '2370H016'
+    },
+    'JuiSuiBridge': {
+        'Node': {
+            'River': '00 Siouguluan',
+            'Reach': 'Reach03',
+            'RS': '20548.5'
+        },
+        'chineseName': '瑞穗大橋',
+        'stationCode': '2370H017'
+    },
+    'YuLiBridge': {
+        'Node': {
+            'River': '00 Siouguluan',
+            'Reach': 'Reach09',
+            'RS': '40897.7'
+        },
+        'chineseName': '玉里大橋',
+        'stationCode': '2370H018'
+    },
+    'MaYeuanBridge': {
+        'Node': {
+            'River': '01 fu yuan',
+            'Reach': '01',
+            'RS': '11148.4'
+        },
+        'chineseName': '馬遠橋',
+        'stationCode': '2370H019'
+    },
+    'LunTianBridge': {
+        'Node': {
+            'River': '00 Siouguluan',
+            'Reach': 'Reach14',
+            'RS': '55323.2'
+        },
+        'chineseName': '崙天大橋',
+        'stationCode': '2370H024'
+    },
+    'WenTianBridge': {
+        'Node': {
+            'River': '00 Siouguluan',
+            'Reach': '00',
+            'RS': '70336.7'
+        },
+        'chineseName': '文田橋',
+        'stationCode': '2370H025'
     }
 }
